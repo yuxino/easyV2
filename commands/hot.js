@@ -7,44 +7,44 @@ const table = require('../utils/table');
 const loading = ora('loading ...');
 
 module.exports = () => {
-  loading.text = 'Succeed';
-  loading.start();
+    loading.text = 'Succeed';
+    loading.start();
 
-  axios({
-    url: '/api/topics/hot.json',
-    method: 'get'
-  })
-    .then((res) => {
-      loading.clear();
-
-      const head = [
-        chalk.bold.cyan('post_id'),
-        chalk.bold.cyan('title'),
-        chalk.bold.cyan('created'),
-        chalk.bold.cyan('replies')
-      ];
-      const colWidths = [10, 40, 18, 9];
-
-      const data = table(head, colWidths);
-
-      for (let i = 0; i < res.length; i++) {
-        data.push([
-          chalk.yellow(res[i].id),
-          chalk.yellow(res[i].title),
-          chalk.yellow(dayjs(res[i].created * 1000).format('YYYY/MM/DD HH:mm')),
-          chalk.yellow(res[i].replies)
-        ]);
-      }
-
-      console.log(data.toString());
-
-      process.exit(1);
+    axios({
+        url: '/api/topics/hot.json',
+        method: 'get'
     })
-    .catch((err) => {
-      loading.fail();
+        .then((res) => {
+            loading.clear();
 
-      console.log('ERR:' + err);
+            const head = [
+                chalk.bold.cyan('post_id'),
+                chalk.bold.cyan('title'),
+                chalk.bold.cyan('created'),
+                chalk.bold.cyan('replies')
+            ];
+            const colWidths = [10, 40, 18, 9];
 
-      process.exit(1);
-    });
+            const data = table(head, colWidths);
+
+            for (let i = 0; i < res.length; i++) {
+                data.push([
+                    chalk.yellow(res[i].id),
+                    chalk.yellow(res[i].title),
+                    chalk.yellow(dayjs(res[i].created * 1000).format('YYYY/MM/DD HH:mm')),
+                    chalk.yellow(res[i].replies)
+                ]);
+            }
+
+            console.log(data.toString());
+
+            process.exit(1);
+        })
+        .catch((err) => {
+            loading.fail();
+
+            console.log('ERR:' + err);
+
+            process.exit(1);
+        });
 };
